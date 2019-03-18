@@ -4,8 +4,8 @@ import QtMultimedia 5.12
 
 Window {
     visible: true
-    width: 640
-    height: 480
+    width: Qt.platform.os==="windows" ? 480 : Screen.width
+    height: Qt.platform.os==="windows" ? 800 : Screen.height
     title: qsTr("Hello World")
     color: "lightgrey"
     Image {
@@ -16,8 +16,8 @@ Window {
         source: "image://live/image"
         anchors.top: parent.top
         anchors.left: parent.left
-        height: 100
-        width: 100
+        height: parent.height/2
+        width: parent.width
         fillMode: Image.PreserveAspectFit
         cache: false
 
@@ -27,6 +27,15 @@ Window {
             source = "image://live/image?id=" + counter
         }
     }
+    VideoOutput {
+        id: streamedCamera
+        objectName: "display"
+        height: parent.height/2
+        width: parent.width
+        anchors.bottom: parent.bottom
+        anchors.right: parent.right
+        source: $provider
+    }
     Rectangle {
         width: parent.width;
         height: 50
@@ -35,14 +44,5 @@ Window {
             anchors.fill: parent;
             onClicked: liveImage.reload();
         }
-    }
-    VideoOutput {
-        id: streamedCamera
-        objectName: "display"
-        height: 300
-        width: 300
-        anchors.bottom: parent.bottom
-        anchors.right: parent.right
-        source: $provider
     }
 }
